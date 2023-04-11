@@ -7,6 +7,14 @@ import urllib.parse
 import urllib.error
 import base64
 import json
+import os
+
+AZURE_API_KEY = os.environ.get('AZURE_COMPUTER_VISION_API_KEY')
+AZURE_COMPUTER_VISION_END_POINT = os.environ.get(
+    'AZURE_COMPUTER_VISION_END_POINT')
+
+# AZURE_API_KEY = ""
+# AZURE_COMPUTER_VISION_END_POINT = ""
 
 
 def sepia(input_img):
@@ -18,18 +26,17 @@ def imageToText(input_img):
     returnTxt = ""
     headers = {
         'Content-Type': 'application/octet-stream',
-        'Ocp-Apim-Subscription-Key': '${{AZURE_COMPUTER_VISION_API_KEY}}',
+        'Ocp-Apim-Subscription-Key': AZURE_API_KEY,
     }
     params = urllib.parse.urlencode({
-        # Request parameters
         'language': 'zh-Hant',
         'detectOrientation': 'true',
         'model-version': 'latest',
     })
-    image_data = open(input_img,"rb").read()
+    image_data = open(input_img, "rb").read()
     conn = http.client.HTTPSConnection(
-        '${{AZURE_COMPUTER_VISION_END_POINT}}')
-    conn.request("POST", "/vision/v3.2/ocr?%s" % params, image_data , headers)
+        AZURE_COMPUTER_VISION_END_POINT)
+    conn.request("POST", "/vision/v3.2/ocr?%s" % params, image_data, headers)
     response = conn.getresponse()
     data = response.read()
     ocr_result = json.loads(data)
