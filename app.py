@@ -18,7 +18,7 @@ def imageToText(input_img):
     returnTxt = ""
     headers = {
         'Content-Type': 'application/octet-stream',
-        'Ocp-Apim-Subscription-Key': 'XXXXXXXXXXXXXXXXXXXXXXXXXX',
+        'Ocp-Apim-Subscription-Key': '${{AZURE_COMPUTER_VISION_API_KEY}}',
     }
     params = urllib.parse.urlencode({
         # Request parameters
@@ -28,7 +28,7 @@ def imageToText(input_img):
     })
     image_data = open(input_img,"rb").read()
     conn = http.client.HTTPSConnection(
-        'XXXXXXXXXXXXXXXXXXXXXXXXXX')
+        '${{AZURE_COMPUTER_VISION_END_POINT}}')
     conn.request("POST", "/vision/v3.2/ocr?%s" % params, image_data , headers)
     response = conn.getresponse()
     data = response.read()
